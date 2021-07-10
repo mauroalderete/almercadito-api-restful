@@ -12,7 +12,7 @@
 *.out
 
 # Dependency directories (remove the comment below to include it)
-# vendor/
+vendor/
 
 # VSCode Debbuger configuration json
 .vscode/
@@ -26,3 +26,11 @@
 # Temporal Files
 tmp/
 temp/
+
+# Binary
+bin/
+deploy/
+release/
+debug/
+**/release
+**/debug
