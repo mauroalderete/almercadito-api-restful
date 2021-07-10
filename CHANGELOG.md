@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## 10/07/2021 importo auth y login
+
+Traslado el mecanismo de login a un proyecto diferente con su propio respositorio
+
+https://gitlab.com/rayquen-google/golang/login
+
+De esta forma se consigue que el cli de login funcione para otros proyectos que requieran acceso a la api de google por token.
+
+Implemento un pequeño script que extrae el listado de nombres de clientes, para verificar que el mecanismo de login, y la importacion de la libreria funcione correctamente.
+
 ## 10/07/2021 Feature imrpot auth y login
 
 Se construyo un script en /login que permite generar un token de acceso a un usuario de google. El script requiere un archivo de credencial válido y utiliza la libreria auth de rayquen-google para completar el login y guardar el token.
