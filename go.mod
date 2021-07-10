@@ -4,6 +4,7 @@ go 1.16
 
 require ( 
     gitlab.com/rayquen-google/golang/auth v1.0.1
+    google.golang.org/api v0.48.0
 )
 
 replace (
