@@ -12,7 +12,7 @@ import (
 )
 
 func main() {
-	var flagOutdir = flag.String("outdir", "./", "folder to read credetnial and save token. For default is './'")
+	var flagWorkdir = flag.String("workdir", "./", "folder to read credential and save token. For default is './'")
 	var flagCredential = flag.String("credential", "credential.json", "Filename to read credential. For default is 'credential.json'")
 	var flagToken = flag.String("token", "token.json", "Filename to save token when login is succefull. For default is 'token.json' ")
 	var flagVersion = flag.Bool("version", false, "Version of alMercadito API RESTful Login")
@@ -30,8 +30,8 @@ func main() {
 		return
 	}
 
-	var credential string = path.Join(*flagOutdir, *flagCredential)
-	var token string = path.Join(*flagOutdir, *flagToken)
+	var credential string = path.Join(*flagWorkdir, *flagCredential)
+	var token string = path.Join(*flagWorkdir, *flagToken)
 
 	fmt.Println("Checking resources availables...")
 	_, err := os.Open(credential)
