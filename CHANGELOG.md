@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## 11/07/2021 montaje simple de webapi con gin
+
+Implemento una arquitectura simple para separar:
+
+- El control de flags
+- La inicialización de un contexto de coneccion
+- Las rutas y funciones del servicio de webapi
+
+Diseñe dos rutas GET, una que retorna un estado simple y otra que toma el contexto de coneccion y devuelve un listado simple de clientes
+
 ## 10/07/2021 importo auth y login
 
 Traslado el mecanismo de login a un proyecto diferente con su propio respositorio
