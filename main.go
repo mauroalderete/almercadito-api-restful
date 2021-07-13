@@ -8,6 +8,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"gitlab.com/vyra/almercadito/almercadito-api-restful/almercadito_context"
+	"gitlab.com/vyra/almercadito/almercadito-api-restful/clients"
 )
 
 type Config struct {
@@ -61,12 +62,7 @@ func Configuration(config *Config) (*almercadito_context.Context, error) {
 	}
 }
 
-type Client struct {
-	ID   string `json:"id"`
-	Name string `json:"name"`
-}
-
-func Startup(ctx *almercadito_context.Context) *gin.Engine {
+func Startup(context *almercadito_context.Context) *gin.Engine {
 
 	server := gin.Default()
 
@@ -74,35 +70,10 @@ func Startup(ctx *almercadito_context.Context) *gin.Engine {
 		g.String(200, "Ok")
 	})
 
-	server.GET("/clients", func(g *gin.Context) {
-		var spreadsheet_id = "1BPGEDtDsiHKNfJylUFfEy9esnYY1If6SAKHW82psthA"
-		var spreadsheet_page = "Clientes"
+	clientsApp := clients.NewClientsApp(context, server)
 
-		readRange := spreadsheet_page + "!A1:I24"
-
-		resp, err := ctx.Service.Spreadsheets.Values.Get(spreadsheet_id, readRange).Do()
-
-		if err != nil {
-			g.String(400, err.Error())
-			return
-		}
-
-		if len(resp.Values) == 0 {
-			g.String(200, "{}")
-			return
-		} else {
-			var clients []Client
-			for _, row := range resp.Values {
-				//fmt.Printf("%s: %s\n", row[0], row[2])
-
-				clients = append(clients, Client{
-					ID:   row[0].(string),
-					Name: row[2].(string),
-				})
-			}
-			g.JSON(200, clients)
-		}
-	})
+	clientsApp.Configure("/clients")
+	clientsApp.Load()
 
 	return server
 }
