@@ -14,7 +14,7 @@ type ClientsModule struct {
 
 func New(server *server.Server, environment *environment.Environment) (*ClientsModule, error) {
 
-	r, err := repository.New()
+	r, err := repository.New(environment)
 	if err != nil {
 		return nil, err
 	}

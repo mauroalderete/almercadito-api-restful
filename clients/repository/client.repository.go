@@ -3,15 +3,20 @@ package repository
 import (
 	"gitlab.com/vyra/almercadito/almercadito-api-restful/clients/models"
 	"gitlab.com/vyra/almercadito/almercadito-api-restful/clients/store"
+	"gitlab.com/vyra/almercadito/almercadito-api-restful/environment"
 )
 
 type ClientRepository struct {
 	clients     *[]models.Client
+	environment *environment.Environment
 }
 
 func New() (*ClientRepository, error) {
-	r := &ClientRepository{}
+func New(environment *environment.Environment) (*ClientRepository, error) {
+	r := &ClientRepository{
 		clients:     &[]models.Client{},
+		environment: environment,
+	}
 
 	return r, nil
 }

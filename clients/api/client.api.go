@@ -13,6 +13,11 @@ type ClientApi struct {
 
 func New(srv *server.Server, environment *environment.Environment) (*ClientApi, error) {
 
+	repo, err := repository.New(environment)
+	if err != nil {
+		return nil, err
+	}
+
 	clientApi := &ClientApi{
 		Environment: environment,
 		Server:      srv.Engine,
