@@ -2,6 +2,7 @@ package api
 
 import (
 	"github.com/gin-gonic/gin"
+	"gitlab.com/vyra/almercadito/almercadito-api-restful/clients/repository"
 	environment "gitlab.com/vyra/almercadito/almercadito-api-restful/environment"
 	"gitlab.com/vyra/almercadito/almercadito-api-restful/server"
 )
@@ -9,6 +10,7 @@ import (
 type ClientApi struct {
 	Server      *gin.Engine
 	Environment *environment.Environment
+	repository  *repository.ClientRepository
 }
 
 func New(srv *server.Server, environment *environment.Environment) (*ClientApi, error) {
@@ -21,6 +23,7 @@ func New(srv *server.Server, environment *environment.Environment) (*ClientApi, 
 	clientApi := &ClientApi{
 		Environment: environment,
 		Server:      srv.Engine,
+		repository:  repo,
 	}
 
 	return clientApi, nil
