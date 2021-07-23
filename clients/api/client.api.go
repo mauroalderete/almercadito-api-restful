@@ -30,7 +30,9 @@ func New(srv *server.Server, environment *environment.Environment) (*ClientApi, 
 }
 
 func (c *ClientApi) Setup() error {
+
 	c.Server.GET("/clients", c.GetClients())
+	c.Server.GET("/reload", c.ReloadClients())
 
 	return nil
 }

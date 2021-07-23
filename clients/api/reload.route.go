@@ -4,15 +4,15 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func (c *ClientApi) GetClients() func(*gin.Context) {
+func (c *ClientApi) ReloadClients() func(*gin.Context) {
 
 	return func(g *gin.Context) {
 
-		clients, err := c.repository.Get()
+		err := c.repository.Reload()
 		if err != nil {
 			g.String(400, err.Error())
 		}
 
-		g.JSON(200, clients)
+		g.Done()
 	}
 }
