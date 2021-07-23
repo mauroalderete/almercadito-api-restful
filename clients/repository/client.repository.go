@@ -11,7 +11,6 @@ type ClientRepository struct {
 	environment *environment.Environment
 }
 
-func New() (*ClientRepository, error) {
 func New(environment *environment.Environment) (*ClientRepository, error) {
 	r := &ClientRepository{
 		clients:     &[]models.Client{},
@@ -21,16 +20,17 @@ func New(environment *environment.Environment) (*ClientRepository, error) {
 	return r, nil
 }
 
-func (r *ClientRepository) Refresh() error {
+func (r *ClientRepository) Reload() error {
 
-	var s store.IClientStore
-	s, err := store.New()
+	var _store store.IClientStore
+	_store, err := store.New()
+	_store.Configuration(r.environment)
 
 	if err != nil {
 		return err
 	}
 
-	clients, err := s.Get()
+	clients, err := _store.Get()
 
 	if err != nil {
 		return nil
