@@ -1,4 +1,4 @@
-package almercadito_context
+package environment
 
 import (
 	"context"
@@ -10,35 +10,34 @@ import (
 	"google.golang.org/api/sheets/v4"
 )
 
-type Context struct {
+type Environment struct {
 	Auth    auth_service.IAuthService
 	Service *sheets.Service
-	Self    *Context
 }
 
-type IContext interface {
+type IEnvironment interface {
 	Initialize(credentialFile string, tokenFile string) error
 }
 
-func (c *Context) Initialize(credentialFile string, tokenFile string) error {
-	c.Auth = &auth_service_spreadsheet.AuthServiceSpreadsheet{}
+func (e *Environment) Initialize(credentialFile string, tokenFile string) error {
+	e.Auth = &auth_service_spreadsheet.AuthServiceSpreadsheet{}
 
-	err := c.Auth.Initialize(credentialFile, tokenFile, true)
+	err := e.Auth.Initialize(credentialFile, tokenFile, true)
 	if err != nil {
 		log.Fatalf("[Main] Error al inicializar %v", err)
 	}
 
-	err = c.Auth.Authenticate()
+	err = e.Auth.Authenticate()
 	if err != nil {
 		log.Fatalf("[Main] Error al autenticar %v", err)
 	}
 
-	srv, err := sheets.NewService(context.Background(), option.WithHTTPClient(c.Auth.GetClient()))
+	srv, err := sheets.NewService(context.Background(), option.WithHTTPClient(e.Auth.GetClient()))
 	if err != nil {
 		log.Fatalf("[Main::NewService] %v", err)
 	}
 
-	c.Service = srv
+	e.Service = srv
 
 	return nil
 }

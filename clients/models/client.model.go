@@ -1,4 +1,4 @@
-package clients
+package model
 
 import (
 	"fmt"
@@ -16,10 +16,7 @@ type Client struct {
 	Comments      string `json:"comments"`
 }
 
-type IClient interface {
-}
-
-func NewClient(id int64,
+func New(id int64,
 	name string,
 	address string,
 	telephone string,
