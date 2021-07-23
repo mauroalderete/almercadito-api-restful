@@ -1,16 +1,17 @@
 package repository
 
 import (
-	model "gitlab.com/vyra/almercadito/almercadito-api-restful/clients/models"
+	"gitlab.com/vyra/almercadito/almercadito-api-restful/clients/models"
 	"gitlab.com/vyra/almercadito/almercadito-api-restful/clients/store"
 )
 
 type ClientRepository struct {
-	clients *[]model.Client
+	clients     *[]models.Client
 }
 
 func New() (*ClientRepository, error) {
 	r := &ClientRepository{}
+		clients:     &[]models.Client{},
 
 	return r, nil
 }
@@ -35,11 +36,11 @@ func (r *ClientRepository) Refresh() error {
 	return nil
 }
 
-func (r *ClientRepository) Get() (*[]model.Client, error) {
+func (r *ClientRepository) Get() (*[]models.Client, error) {
 	return r.clients, nil
 }
 
-func (r *ClientRepository) GetByID(id int64) (*model.Client, error) {
+func (r *ClientRepository) GetByID(id int64) (*models.Client, error) {
 
 	for _, c := range *r.clients {
 		if c.ID == id {
