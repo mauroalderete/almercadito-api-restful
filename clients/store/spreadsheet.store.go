@@ -53,10 +53,7 @@ func (s *SpreadsheetStore) Get() (*[]models.Client, error) {
 
 		var h hash.Hash
 
-		fmt.Println("***********************")
-
 		h.SetFromHex(row[0].(string))
-		fmt.Printf("value: %v", h.ToHex())
 
 		clie, err := models.New(
 			h,
@@ -69,7 +66,7 @@ func (s *SpreadsheetStore) Get() (*[]models.Client, error) {
 			shared.GetStringFromRow(row, 8, ""))
 
 		if err != nil {
-			fmt.Printf("%v", err)
+			fmt.Printf("[Clients.Store.Get] Error to Created Model %v", err)
 			continue
 		}
 
@@ -92,7 +89,6 @@ func (s *SpreadsheetStore) GetByID(id hash.Hash) (*models.Client, error) {
 
 		if id.EqualFromHex(row[0].(string)) {
 
-			fmt.Println("Found!!!")
 			clie, err := models.New(
 				id,
 				shared.GetStringFromRow(row, 2, ""),
