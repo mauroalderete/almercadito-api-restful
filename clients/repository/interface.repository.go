@@ -1,9 +1,11 @@
 package repository
 
-import model "gitlab.com/vyra/almercadito/almercadito-api-restful/clients/models"
+import (
+	model "gitlab.com/vyra/almercadito/almercadito-api-restful/clients/models"
+	"gitlab.com/vyra/almercadito/almercadito-api-restful/shared/hash"
+)
 
 type IClientRepository interface {
-	Refresh() error
 	Get() (*[]model.Client, error)
-	GetByID(id int64) (*model.Client, error)
+	GetByID(id hash.Hash) (*model.Client, error)
 }
