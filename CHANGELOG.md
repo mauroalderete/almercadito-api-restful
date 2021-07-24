@@ -1,5 +1,18 @@
 # CHANGELOG
 
+## 24/07/2021 hash y mejoras en api de clientes
+
+Decidi descartar el uso de un verbo reload para recargar la cache del repositorio.
+Asi cada llamada consulta siempre la api de google y garantiza que los datos esten disponibles.
+
+Tuve que crear una structura para manejar los ID hexadecimales que plantea appsheet. Todavia no es seguro que tipo de datos se utilizara para la clave principal en las tablas, como se operara al insertar un nuevo elemento y como se dara la verificacion en caso de claves repetidas.
+
+Por esta razones, decidi crear un elemento id del tipo hash que mantiene el valor en dos variantes numericas Hex (expresado como string) e Int64.
+
+Tambien se creo un metodo especifico para el parseo de filas de spreadsheets debido a que los tamaños de los arreglos devueltos no son siempre iguales, sino que va de acuerdo al contenido de la fila.
+
+Se define una varaible de entorno para cada modulo. De esta forma es posible acceder a los diferentes libros y paginas que cada modulo requiere.
+
 ## 11/07/2021 montaje simple de webapi con gin
 
 Implemento una arquitectura simple para separar:

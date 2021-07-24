@@ -6,8 +6,10 @@ import (
 	"log"
 	"path"
 
-	"github.com/gin-gonic/gin"
-	"gitlab.com/vyra/almercadito/almercadito-api-restful/almercadito_context"
+	"gitlab.com/vyra/almercadito/almercadito-api-restful/clients"
+	"gitlab.com/vyra/almercadito/almercadito-api-restful/environment"
+	"gitlab.com/vyra/almercadito/almercadito-api-restful/root"
+	"gitlab.com/vyra/almercadito/almercadito-api-restful/server"
 )
 
 type Config struct {
@@ -41,68 +43,37 @@ func main() {
 		TokenFile:      path.Join(*flagWorkdir, *flagToken),
 	}
 
-	ctx, err := Configuration(&config)
+	var env *environment.Environment = &environment.Environment{}
+
+	err := env.Initialize(config.CredentialFile, config.TokenFile)
 	if err != nil {
-		log.Fatalf("[Main] Hubo un problema al configurar el servicio %v", err)
+		log.Fatalf("[Main] Load environment error. %v", err)
 	}
 
-	Startup(ctx).Run()
-}
-
-func Configuration(config *Config) (*almercadito_context.Context, error) {
-	var ctx *almercadito_context.Context = &almercadito_context.Context{}
-
-	err := ctx.Initialize(config.CredentialFile, config.TokenFile)
-
+	srv, err := server.New(env)
 	if err != nil {
-		return nil, err
-	} else {
-		return ctx, nil
+		log.Fatalf("[Main] Create server error. %v", err)
 	}
-}
 
-type Client struct {
-	ID   string `json:"id"`
-	Name string `json:"name"`
-}
+	rootModule, err := root.New(srv, env)
+	if err != nil {
+		log.Fatalf("[Main] Error to load root module. %v", err)
+	}
 
-func Startup(ctx *almercadito_context.Context) *gin.Engine {
+	err = rootModule.Api.Setup()
+	if err != nil {
+		log.Fatalf("[Main] Error to setup api root. %v", err)
+	}
 
-	server := gin.Default()
+	clientsModule, err := clients.New(srv, env)
+	if err != nil {
+		log.Fatalf("[Main] Error to load clients module. %v", err)
+	}
 
-	server.GET("/status", func(g *gin.Context) {
-		g.String(200, "Ok")
-	})
+	err = clientsModule.Api.Setup()
+	if err != nil {
+		log.Fatalf("[Main] Error to setup api clients. %v", err)
+	}
 
-	server.GET("/clients", func(g *gin.Context) {
-		var spreadsheet_id = "1BPGEDtDsiHKNfJylUFfEy9esnYY1If6SAKHW82psthA"
-		var spreadsheet_page = "Clientes"
-
-		readRange := spreadsheet_page + "!A1:I24"
-
-		resp, err := ctx.Service.Spreadsheets.Values.Get(spreadsheet_id, readRange).Do()
-
-		if err != nil {
-			g.String(400, err.Error())
-			return
-		}
-
-		if len(resp.Values) == 0 {
-			g.String(200, "{}")
-			return
-		} else {
-			var clients []Client
-			for _, row := range resp.Values {
-				//fmt.Printf("%s: %s\n", row[0], row[2])
-
-				clients = append(clients, Client{
-					ID:   row[0].(string),
-					Name: row[2].(string),
-				})
-			}
-			g.JSON(200, clients)
-		}
-	})
-
-	return server
+	srv.Engine.Run()
 }
