@@ -3,20 +3,22 @@ package models
 import (
 	"fmt"
 	"strings"
+
+	hash "gitlab.com/vyra/almercadito/almercadito-api-restful/shared/hash"
 )
 
 type Client struct {
-	ID            int64  `json:"id"`
-	Name          string `json:"name"`
-	Address       string `json:"address"`
-	Telephone     string `json:"telephone"`
-	Whatsapp      string `json:"whatsapp"`
-	Facebook      string `json:"facebook"`
-	DeliveryTimes string `json:"deliveryTimes"`
-	Comments      string `json:"comments"`
+	ID            hash.Hash `json:"id"`
+	Name          string    `json:"name"`
+	Address       string    `json:"address"`
+	Telephone     string    `json:"telephone"`
+	Whatsapp      string    `json:"whatsapp"`
+	Facebook      string    `json:"facebook"`
+	DeliveryTimes string    `json:"deliveryTimes"`
+	Comments      string    `json:"comments"`
 }
 
-func New(id int64,
+func New(id hash.Hash,
 	name string,
 	address string,
 	telephone string,
@@ -26,8 +28,8 @@ func New(id int64,
 	comments string) (*Client, error) {
 	c := new(Client)
 
-	if id <= 0 {
-		return nil, fmt.Errorf("el ID debe ser un número positivo: %v", id)
+	if id.Empty() {
+		return nil, fmt.Errorf("el ID no puede estar vacio: %v", id)
 	}
 
 	if strings.Trim(name, "\t \n") == "" {
