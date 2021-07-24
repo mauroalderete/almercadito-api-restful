@@ -3,67 +3,70 @@ package store
 import (
 	"fmt"
 	"os"
-	"strconv"
 
 	"gitlab.com/vyra/almercadito/almercadito-api-restful/clients/models"
 	"gitlab.com/vyra/almercadito/almercadito-api-restful/environment"
+	"gitlab.com/vyra/almercadito/almercadito-api-restful/shared"
+	"gitlab.com/vyra/almercadito/almercadito-api-restful/shared/hash"
 )
 
 type SpreadsheetStore struct {
-	spreadsheetID   string
-	spreadsheetPage string
-	environment     *environment.Environment
+	spreadsheetID    string
+	spreadsheetPage  string
+	spreadsheetRange string
+	environment      *environment.Environment
+}
+
+func New() (*SpreadsheetStore, error) {
+
+	s := &SpreadsheetStore{}
+
+	return s, nil
 }
 
 func (s *SpreadsheetStore) Configuration(environment *environment.Environment) error {
 
 	s.environment = environment
-	s.spreadsheetID = os.Getenv("SPREADSHEET_ID")
-	s.spreadsheetPage = os.Getenv("SPREADSHEET_PAGE")
+	s.spreadsheetID = os.Getenv("MODULE_CLIENTS_SPREADSHEET_ID")
+	s.spreadsheetPage = os.Getenv("MODULE_CLIENTS_SPREADSHEET_PAGE")
+	s.spreadsheetRange = os.Getenv("MODULE_CLIENTS_SPREADSHEET_RANGE")
 
 	return nil
 }
 
 func (s *SpreadsheetStore) Get() (*[]models.Client, error) {
 
-	fmt.Printf("[store] spreadsheetID %v\n", s.spreadsheetID)
-	fmt.Printf("[store] spreadsheetPage %v\n", s.spreadsheetPage)
-	readRange := s.spreadsheetPage + "!A1:I24"
-	fmt.Printf("[store] readRange %v\n", readRange)
-
-	resp, err := s.environment.Service.Spreadsheets.Values.Get(s.spreadsheetID, readRange).Do()
+	resp, err := s.environment.Service.Spreadsheets.Values.Get(s.spreadsheetID, s.spreadsheetPage+"!"+s.spreadsheetRange).Do()
 
 	if err != nil {
-		fmt.Printf("[store] error %v\n", err.Error())
+		fmt.Printf("[Clients.Store.Get] Error %v\n", err.Error())
 		return nil, err
 	}
 
 	var clients []models.Client
 
 	if len(resp.Values) == 0 {
-		fmt.Printf("[store] vacio")
 		return &[]models.Client{}, nil
 	}
 
-	fmt.Printf("[store] hay %v\n", len(resp.Values))
-
 	for _, row := range resp.Values {
 
-		value, err := strconv.ParseInt(row[0].(string), 16, 64)
-		if err != nil {
-			fmt.Printf("Convert... %v", err)
-			continue
-		}
+		var h hash.Hash
+
+		fmt.Println("***********************")
+
+		h.SetFromHex(row[0].(string))
+		fmt.Printf("value: %v", h.ToHex())
 
 		clie, err := models.New(
-			value,
-			row[2].(string),
-			"",
-			"",
-			"",
-			"",
-			"",
-			"")
+			h,
+			shared.GetStringFromRow(row, 2, ""),
+			shared.GetStringFromRow(row, 3, ""),
+			shared.GetStringFromRow(row, 4, ""),
+			shared.GetStringFromRow(row, 5, ""),
+			shared.GetStringFromRow(row, 6, ""),
+			shared.GetStringFromRow(row, 7, ""),
+			shared.GetStringFromRow(row, 8, ""))
 
 		if err != nil {
 			fmt.Printf("%v", err)
@@ -76,6 +79,33 @@ func (s *SpreadsheetStore) Get() (*[]models.Client, error) {
 	return &clients, nil
 }
 
-func (s *SpreadsheetStore) GetByID() (*models.Client, error) {
+func (s *SpreadsheetStore) GetByID(id hash.Hash) (*models.Client, error) {
+
+	resp, err := s.environment.Service.Spreadsheets.Values.Get(s.spreadsheetID, s.spreadsheetPage+"!"+s.spreadsheetRange).Do()
+
+	if err != nil {
+		fmt.Printf("[Clients.Store.GetByID] Error %v\n", err.Error())
+		return nil, err
+	}
+
+	for _, row := range resp.Values {
+
+		if id.EqualFromHex(row[0].(string)) {
+
+			fmt.Println("Found!!!")
+			clie, err := models.New(
+				id,
+				shared.GetStringFromRow(row, 2, ""),
+				shared.GetStringFromRow(row, 3, ""),
+				shared.GetStringFromRow(row, 4, ""),
+				shared.GetStringFromRow(row, 5, ""),
+				shared.GetStringFromRow(row, 6, ""),
+				shared.GetStringFromRow(row, 7, ""),
+				shared.GetStringFromRow(row, 8, ""))
+
+			return clie, err
+		}
+	}
+
 	return nil, nil
 }
