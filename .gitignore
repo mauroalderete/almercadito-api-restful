@@ -22,6 +22,8 @@ vendor/
 
 # Credentials of ID app
 *credential*.json
+credential/
+credentials/
 
 # Temporal Files
 tmp/

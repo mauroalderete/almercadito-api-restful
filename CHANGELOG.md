@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 24/07/2021 Preparo deploy por docker
+
+Construyo un dockerfile que compila la aplicacion en una imagen y prepara su ejecucion en otra. El resultado es una imagen que permite ejecutar el microservicio.
+
+Un dockercompose de ejemplo muestra la configuracion necesaria para levantar el servicio.
+
+Se libera una instancia para pruebas de rendimiento.
+
 ## 24/07/2021 hash y mejoras en api de clientes
 
 Decidi descartar el uso de un verbo reload para recargar la cache del repositorio.
