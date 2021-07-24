@@ -29,7 +29,7 @@ func main() {
 	flag.Parse()
 
 	if *flagVersion {
-		fmt.Println("v1.0.0")
+		fmt.Println("v1.1.0")
 		return
 	}
 
