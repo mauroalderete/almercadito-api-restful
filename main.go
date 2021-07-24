@@ -75,5 +75,5 @@ func main() {
 		log.Fatalf("[Main] Error to setup api clients. %v", err)
 	}
 
-	srv.Engine.Run()
+	srv.Engine.Run(":8080")
 }
