@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 24/07/2021 Release v1.1.0
+
+Libero una primera version que solo accede al maestro de clientes
+
 ## 24/07/2021 Preparo deploy por docker
 
 Construyo un dockerfile que compila la aplicacion en una imagen y prepara su ejecucion en otra. El resultado es una imagen que permite ejecutar el microservicio.

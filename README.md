@@ -25,7 +25,66 @@ Se dispodra de una solicitud para forzar la actualización de la cache.
 
 El entorno hará uso de variables de entorno, y será diseñado para funcionar con docker.
 
-# Implementación
+# Implementación con Docker
+
+Se adjunta un ```Dockerfile``` que compila y genera una imagen con el servicio ejecutable.
+Se configura para que el servicio busque las credenciales dentro de la carpeta ```credential``` en el home del usuario ```appuser``` ```/app```
+
+Se adjunta un archivo ```docker-compose.yml``` con un detalle de las caracteristicas necesarias para desplegar el servicio.
+
+Se fijan algunas varaibles de entorno para indicar los id de las spreadsheets, las paginas y los rangos que cada modulo requiere para parsear la informacion.
+
+El servidor debe tener:
+
+- git
+- Docker
+
+> Se debe tener un par de credencial-token listos para correr el servicio
+
+El procedimiento es:
+
+ir a un directorio ddesde donde se ejecutara el servicio, por ejemplo:
+
+```bash
+cd /home/user/Programas
+```
+
+clonar el proyecto desde [Gitlab](https://gitlab.com/vyra/almercadito/almercadito-api-restful)
+
+```bash
+git clone https://gitlab.com/vyra/almercadito/almercadito-api-restful
+```
+
+Ingresar
+
+```bash
+cd almercadito-api-restful
+```
+
+editar el archivo ```docker-compose.yml``` segun sus necesidades
+
+```bash
+nano docker-compose.yml
+```
+
+> Recuerde ajustar las varaibles de entorno y el puerto a utilizar. Internamente el servicio interactuara con el puerto 8080, eso queda siempre igual.
+
+Guardar los cambios. Antes de ejecutar asegurece de que tenga las credenciales dentro de la carpeta credential. Una forma de hacerlo es creando los archivos por defecto y copiando el contenido con los valores necesarios
+
+```bash
+cd credential
+touch credential.json
+touch token.json
+echo "........" > credential.json
+echo "........" > token.json
+cd ..
+```
+
+Por ultimo solo queda ejecutar el servicio con docker compose
+
+```bash
+docker-compose -d up
+```
 
 ## Credenciales y acceso
 
