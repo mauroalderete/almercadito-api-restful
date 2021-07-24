@@ -2,14 +2,14 @@ version: '3.1'
 
 services:
     api:
-        image: almercadito-api-restful:1.0.0
+        image: rayquen/almercadito-api-restful:1.1.0
         restart: always
         environment: 
             MODULE_CLIENTS_SPREADSHEET_ID: 123
-            MODULE_CLIENTS_SPREADSHEET_PAGE: Clients
-            MODULE_CLIENTES_SPREADSHEET_RANGE: A2:I
+            MODULE_CLIENTS_SPREADSHEET_PAGE: Clientes
+            MODULE_CLIENTS_SPREADSHEET_RANGE: A2:I
             GIN_MODE: release
         volumes:
             - ./credential:/app/credential
         ports:
-            - "7070:8080"
+            - "7000:8080"
